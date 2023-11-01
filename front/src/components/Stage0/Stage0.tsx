@@ -1,38 +1,34 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import '../styles.css';
 import { Stage0Cell } from '../Stage0Cell/Stage0Cell';
+import {GridType, PlayerType} from "types";
 
 interface Props {
-    coords: 0|1|2|3|4|5|6|7|8|9 // 0: Stage 0, 1-9: Stage 1 (Stage 2+ not implemented)
-    currPlayer: 'X' | 'O'
+  id: string
+  grid: GridType
+  setGrid: Dispatch<SetStateAction<GridType>>
+  currPlayer: PlayerType
+  setCurrPlayer: Dispatch<SetStateAction<PlayerType>>
 }
 
 export function Stage0(props: Props) {
-    const [grid, setGrid] = useState({
-        coords: props.coords,
-        values: [
-        '','','',
-        '','','',
-        '','','',
-    ]});
-
-    return (
-        <>
-            <p className={'stage0-cell-p'}>
-                <Stage0Cell id={String(props.coords) + '7'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-                <Stage0Cell id={String(props.coords) + '8'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-                <Stage0Cell id={String(props.coords) + '9'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-            </p>
-            <p className={'stage0-cell-p'}>
-                <Stage0Cell id={String(props.coords) + '4'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-                <Stage0Cell id={String(props.coords) + '5'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-                <Stage0Cell id={String(props.coords) + '6'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-            </p>
-            <p className={'stage0-cell-p'}>
-                <Stage0Cell id={String(props.coords) + '1'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-                <Stage0Cell id={String(props.coords) + '2'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-                <Stage0Cell id={String(props.coords) + '3'} grid={grid} setGrid={setGrid} currPlayer={props.currPlayer}/>
-            </p>
-        </>
-    )
+  return (
+    <>
+      <p className={'stage0-cell-p'}>
+        <Stage0Cell id={'1' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+        <Stage0Cell id={'2' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+        <Stage0Cell id={'3' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+      </p>
+      <p className={'stage0-cell-p'}>
+        <Stage0Cell id={'4' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+        <Stage0Cell id={'5' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+        <Stage0Cell id={'6' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+      </p>
+      <p className={'stage0-cell-p'}>
+        <Stage0Cell id={'7' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+        <Stage0Cell id={'8' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+        <Stage0Cell id={'9' + props.id} grid={props.grid} setGrid={props.setGrid} currPlayer={props.currPlayer} setCurrPlayer={props.setCurrPlayer}/>
+      </p>
+    </>
+  )
 }

@@ -1,1 +1,2 @@
-export * from "./GridFace";
+export * from './GridType';
+export * from './PlayerType';
