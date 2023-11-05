@@ -13,14 +13,14 @@ interface Props {
 
 export function Stage0Cell(props: Props) {
   let tempGrid = JSON.parse(JSON.stringify(props.grid));
+  
   return (
     <button
       className={'stage0-cell'}
-      id={ props.id }
+      id={props.id}
       onClick={ () => {
         tempGrid[ getCellCoords(props.id) ] = props.currPlayer;
         props.setGrid(tempGrid);
-        console.log(tempGrid);
         if(props.currPlayer === "X")
           props.setCurrPlayer('O');
         else

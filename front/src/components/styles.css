@@ -2,6 +2,7 @@
     height: 50px;
     width: 50px;
     margin: 1px;
+    position: relative;
 }
 
 .stage0-cell-p {

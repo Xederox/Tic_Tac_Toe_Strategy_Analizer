@@ -1,0 +1,1 @@
+export type dbGridType = Array<'0'|'1'|'2'>
