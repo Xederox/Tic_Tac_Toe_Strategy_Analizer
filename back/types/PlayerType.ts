@@ -1,1 +1,1 @@
-export type PlayerType = 'X'|'O'
+export type PlayerType = 1 | 2;

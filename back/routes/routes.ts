@@ -1,6 +1,4 @@
 import {Router} from "express";
-import {selectFromDB} from "../scripts/createdb/stage0/dbFunctions";
-import {dbRecord} from "../types";
 import {pool} from "../db";
 
 export const stage0Route = Router()
@@ -15,6 +13,5 @@ export const stage0Route = Router()
       console.log('Not implemented');
       console.log(e);
     }
-    
-    res.json({records});
+    res.json(records);
   });

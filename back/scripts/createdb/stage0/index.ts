@@ -2,15 +2,15 @@ import {pool} from "../../../db";
 import {checkWin} from './checkWin';
 import {checkEnd} from "./checkEnd";
 import {insertIntoDB, insertRelation, selectFromDB, updateDB} from "./dbFunctions";
-import {dbGridType, dbRecord} from "../../../types";
+import {GridType, dbRecord} from "../../../types";
 
-const grid: dbGridType = [
+const grid: GridType = [
   '0', '0', '0',
   '0', '0', '0',
   '0', '0', '0',
 ];
 
-const getID = (grid: dbGridType, currPlayer: 0 | 1 | 2, lastMove: string): string => {
+const getID = (grid: GridType, currPlayer: 0 | 1 | 2, lastMove: string): string => {
   let id = '';
   for(let i=0; i<grid.length; i++)
     id = id + grid[i];
@@ -32,7 +32,7 @@ const checkRepeat = (id: string) => {
   return false;
 };
 
-const createStage0DB = async ( parentID: string, grid: dbGridType, currPlayer: 1|2): Promise<dbRecord> => {
+const createStage0DB = async (parentID: string, grid: GridType, currPlayer: 1|2): Promise<dbRecord> => {
   const parentMove: dbRecord = {
     id: parentID,
     perfect: -1,
@@ -42,7 +42,7 @@ const createStage0DB = async ( parentID: string, grid: dbGridType, currPlayer: 1
     loses: 0,
   };
   let currMove: dbRecord;
-  let currGrid: dbGridType;
+  let currGrid: GridType;
   const counter = {
     perfectWins: 0,
     perfectDraws: 0,

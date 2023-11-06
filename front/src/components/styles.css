@@ -8,3 +8,8 @@
 .stage0-cell-p {
     margin: 1px;
 }
+
+table, td {
+    border: 1px solid;
+    text-align: center;
+}

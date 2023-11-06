@@ -1,1 +1,1 @@
-export type GridType = Array<'-'|'X'|'O'>
+export type GridType = Array<'0'|'1'|'2'>
