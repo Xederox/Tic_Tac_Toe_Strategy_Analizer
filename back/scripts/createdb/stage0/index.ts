@@ -11,9 +11,10 @@ const grid: dbGridType = [
 ];
 
 const getID = (grid: dbGridType, currPlayer: 0 | 1 | 2, lastMove: string): string => {
-  let id = `${currPlayer + lastMove}`;
+  let id = '';
   for(let i=0; i<grid.length; i++)
     id = id + grid[i];
+  id = id + `${currPlayer + lastMove}`;
   return id;
 };
 
