@@ -1,70 +1,75 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, Dispatch, SetStateAction, useState} from 'react';
 import './App.css';
 import {Stage0} from './components/Stage0/Stage0';
-import {GridType,  PlayerType} from "types";
+import {GridType, PlayerType, StageType} from "types";
 import {MovesList} from "./components/MovesList/MovesList";
+import {ChooseStage} from "./components/ChooseStage/ChooseStage";
+import {ChooseFirstPlayer} from "./components/ChooseFirstPlayer/ChooseFirstPlayer";
+import {getID, otherFirstPlayer, otherPlayer} from "./utils/AppUtils";
+import {Stage1} from "./components/Stage1/Stage1";
+import {Tutorial} from "./components/Tutorial/Tutorial";
 
-const stageZeroGrid: GridType = [
-  '0','0','0',
-  '0','0','0',
-  '0','0','0',
-];
-
-const stageOneGrid: GridType = [
-  '0','0','0','0','0','0','0','0','0', //Stage1Cell 1
-  '0','0','0','0','0','0','0','0','0', //Stage1Cell 2
-  '0','0','0','0','0','0','0','0','0', //etc
-  '0','0','0','0','0','0','0','0','0',
-  '0','0','0','0','0','0','0','0','0',
-  '0','0','0','0','0','0','0','0','0',
-  '0','0','0','0','0','0','0','0','0',
-  '0','0','0','0','0','0','0','0','0',
-  '0','0','0','0','0','0','0','0','0',
-];
-
-//When implementing higher stages (*chuckles*) remember to change getCellCoords.ts
-
-const getID = (grid: GridType, currPlayer: PlayerType, lastMove: string): string => {
-  let start = true;
-  let id = '';
-  for(let i=0; i<grid.length; i++) {
-    if(grid[i] !== '0')
-      start = false;
-    id = id + grid[i];
-  }
-  id = id + `${currPlayer + lastMove}`;
-  if(start)
-    return '0000000000';
-  return id;
-};
-
-const lastPlayer = (currPlayer: PlayerType) => {
-  if(currPlayer === 2)
-    return 1;
-  else
-    return 2;
-}
+//When implementing higher stages (*chuckles*) remember to change getCellCoords.ts, starting_grids.ts and gridKeeper.ts
 
 interface GameContextType {
-  firstPlayer: 'X'|'O',
-  secondPlayer: 'X'|'O',
+  firstPlayer: 'O'|'X'|null,
+  secondPlayer: 'O'|'X'|null,
+  stage: StageType,
+  grid: GridType,
+  setGrid: Dispatch<SetStateAction<GridType>>,
+  allowBtn: Array<boolean>,
+  setAllowBtn: Dispatch<SetStateAction<Array<boolean>>>
+  currPlayer: PlayerType,
+  setCurrPlayer: Dispatch<SetStateAction<PlayerType>>,
+  lastMove: string,
+  setLastMove: Dispatch<SetStateAction<string>>,
 }
 
 export const GameContext = createContext<GameContextType | null>(null);
 
 export default function App() {
-  const [grid, setGrid] = useState(stageZeroGrid);
+  const [stage, setStage] = useState<StageType>(null)
+  const [grid, setGrid] = useState<GridType>([]);
+  const [allowBtn, setAllowBtn] = useState<Array<boolean>>([]);
   const [currPlayer, setCurrPlayer] = useState<PlayerType>(1);
+  const [firstPlayer, setFirstPlayer] = useState<'O'|'X'|null>(null);
+  const [lastMove, setLastMove] = useState<string>('');
   
   return (
     <>
       <GameContext.Provider value={{
-        firstPlayer: 'X',
-        secondPlayer: 'O',
+        firstPlayer: firstPlayer,
+        secondPlayer: otherFirstPlayer(firstPlayer),
+        stage: stage,
+        grid: grid,
+        setGrid: setGrid,
+        allowBtn: allowBtn,
+        setAllowBtn: setAllowBtn,
+        currPlayer: currPlayer,
+        setCurrPlayer: setCurrPlayer,
+        lastMove: lastMove,
+        setLastMove: setLastMove,
       }}>
-        <Stage0 id={'0'} grid={grid} setGrid={setGrid} currPlayer={currPlayer} setCurrPlayer={setCurrPlayer}/>
         
-        <MovesList stage={'stage0'} currPositionID={getID(grid, lastPlayer(currPlayer), '')} currPlayer={currPlayer}/>
+        <>{stage === 'stage0' ?
+          <>
+            <Stage0 id={''}/>
+            <MovesList stage={stage} currPositionID={getID(grid, otherPlayer(currPlayer), '')} currPlayer={currPlayer}/>
+          </> : <></>
+        }</>
+        
+        <>{stage === 'stage1' ?
+          <>
+            <div><Stage1 id={''}/></div>
+            <MovesList stage={stage} currPositionID={getID(grid, otherPlayer(currPlayer), '00')} currPlayer={currPlayer}/>
+          </> : <></>
+        }</>
+        
+        <ChooseStage setStage={setStage} setFirstPlayer={setFirstPlayer}/>
+        <ChooseFirstPlayer firstPlayer={firstPlayer} setFirstPlayer={setFirstPlayer} gridLength={grid.length}/>
+        
+        <Tutorial/>
+        
       </GameContext.Provider>
     </>
   );

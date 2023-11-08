@@ -2,14 +2,53 @@
     height: 50px;
     width: 50px;
     margin: 1px;
-    position: relative;
+    border: 1px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
 }
 
-.stage0-cell-p {
-    margin: 1px;
+.stage0 {
+    display: grid;
+    grid-template-rows: 51px 51px 51px;
+    grid-template-columns: 51px 51px 51px;
 }
 
-table, td {
+.stage1 {
+    display: grid;
+    grid-template-rows: 160px 160px 160px;
+    grid-template-columns: 160px 160px 160px;
+}
+
+button:disabled {
+    background: lightgrey;
+}
+
+.grid-container{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}
+
+.grid-item{
+    border: 2px solid black;
+    padding: 30px;
+    display: grid;
+    place-items: center;
+}
+
+table {
+    border: 1px solid;
+    margin-top: 50px;
+    text-align: center;
+}
+
+td {
     border: 1px solid;
     text-align: center;
+}
+
+p {
+    margin: 3px;
 }

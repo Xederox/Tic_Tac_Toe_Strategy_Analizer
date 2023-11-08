@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import { dbRecord, PlayerType} from "types";
+import React, {useContext, useEffect, useState} from 'react';
+import {dbRecord, PlayerType, StageType} from "types";
 import {Move} from "../Move/Move";
+import {GameContext} from "../../App";
 
 interface Props {
-  stage: string,
+  stage: StageType,
   currPositionID: string,
   currPlayer: PlayerType,
 }
@@ -13,11 +14,30 @@ export const MovesList = (props: Props) => {
   
   useEffect(() => {
     (async () => {
-      const res = await fetch(`http://localhost:3001/${props.stage}/${props.currPositionID}`);
-      const data = await res.json();
-      setMoves(data);
+      if(props.stage === 'stage0'){
+        try {
+          const res = await fetch(`http://localhost:3001/${props.stage}/${props.currPositionID}`);
+          const data = await res.json();
+          setMoves(data);
+        } catch(e) {
+          console.log(e);
+        }
+      }
     })();
   }, [props.currPlayer]);
+  
+  const game = useContext(GameContext);
+  if(game === null)
+    return null;
+  if(!game.stage || !game.firstPlayer)
+    return null;
+  
+  if(game.stage === 'stage1')
+    return (
+      <>
+        <p>Database not implemented</p>
+      </>
+    );
   
   return (
     <>
