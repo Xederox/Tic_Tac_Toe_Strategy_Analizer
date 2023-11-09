@@ -38,4 +38,4 @@ Move without restrictions can be made inside any non-<b>Disabled</b> <b>Big Cell
 
 -change script for Stage 0 so that it creates necessary tables in database instead of just filling them in
 
--do something with css (it's gonna be fun and colorful and fun cuz making a ******* 3x3 grid absolutly did not take away 2 days of my life)
+-do something with css
