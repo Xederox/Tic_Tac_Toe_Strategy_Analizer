@@ -9,7 +9,7 @@ import {getID, otherFirstPlayer, otherPlayer} from "./utils/AppUtils";
 import {Stage1} from "./components/Stage1/Stage1";
 import {Tutorial} from "./components/Tutorial/Tutorial";
 
-//When implementing higher stages (*chuckles*) remember to change getCellCoords.ts, starting_grids.ts and gridKeeper.ts
+//When implementing higher stages (*chuckles*) remember to change getCellIndex.ts, starting_grids.ts and gridKeeper.ts
 
 interface GameContextType {
   firstPlayer: 'O'|'X'|null,
@@ -17,8 +17,6 @@ interface GameContextType {
   stage: StageType,
   grid: GridType,
   setGrid: Dispatch<SetStateAction<GridType>>,
-  allowBtn: Array<boolean>,
-  setAllowBtn: Dispatch<SetStateAction<Array<boolean>>>
   currPlayer: PlayerType,
   setCurrPlayer: Dispatch<SetStateAction<PlayerType>>,
   lastMove: string,
@@ -30,7 +28,6 @@ export const GameContext = createContext<GameContextType | null>(null);
 export default function App() {
   const [stage, setStage] = useState<StageType>(null)
   const [grid, setGrid] = useState<GridType>([]);
-  const [allowBtn, setAllowBtn] = useState<Array<boolean>>([]);
   const [currPlayer, setCurrPlayer] = useState<PlayerType>(1);
   const [firstPlayer, setFirstPlayer] = useState<'O'|'X'|null>(null);
   const [lastMove, setLastMove] = useState<string>('');
@@ -43,8 +40,6 @@ export default function App() {
         stage: stage,
         grid: grid,
         setGrid: setGrid,
-        allowBtn: allowBtn,
-        setAllowBtn: setAllowBtn,
         currPlayer: currPlayer,
         setCurrPlayer: setCurrPlayer,
         lastMove: lastMove,
