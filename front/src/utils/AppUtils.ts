@@ -13,8 +13,8 @@ export const getID = (grid: GridType, currPlayer: PlayerType, lastMove: string):
     if(grid.length === 9) {
       return '0000000000';
     }
-    if(grid.length === 81)
-      return 'Stage 1 Starting Grid ID Here';
+    if(grid.length === 91)
+      return '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
   }
   return id;
 };

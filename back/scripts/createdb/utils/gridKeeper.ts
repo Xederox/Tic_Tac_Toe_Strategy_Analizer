@@ -1,4 +1,4 @@
-import {GridType} from "types";
+import {GridType} from "../../../types";
 
 const keepersCheckWin = (grid: GridType): string => {
   if((grid[0]==='1' || grid[0]==='2') && grid[0]===grid[1] && grid[0]===grid[2]) return grid[0];
@@ -24,8 +24,8 @@ const keepersCheckDraw = (grid: GridType): string => {
 //Will not work for stage 2+ game
 export const gridKeeper = (grid: GridType, lastMove: string): GridType => {
   let gridOfKeepers = JSON.parse(JSON.stringify(grid));
-  const i0 = (Number(lastMove[0])-1)*10;
-  const i1 = (Number(lastMove[1])-1)*10;
+  const i0 = (Number(lastMove[1])-1)*10;
+  const i1 = (Number(lastMove[0])-1)*10;
   let checkResult: string;
   
   checkResult = keepersCheckWin( gridOfKeepers.slice(i1, i1+9) );
@@ -35,13 +35,13 @@ export const gridKeeper = (grid: GridType, lastMove: string): GridType => {
   
   if( gridOfKeepers[i0+9]==='1' || gridOfKeepers[i0+9]==='2' || gridOfKeepers[i0+9]==='3' ){
     for(let i=0; i<9; i++)
-      if(gridOfKeepers[i*10+9] === '-1')
+      if(gridOfKeepers[i*10+9] === '4')
         gridOfKeepers[i*10+9] = '0';
   }
   else{
     for(let i=0; i<9; i++)
       if (gridOfKeepers[i*10+9] === '0')
-        gridOfKeepers[i*10+9] = '-1';
+        gridOfKeepers[i*10+9] = '4';
     gridOfKeepers[i0+9] = '0';
   }
   
