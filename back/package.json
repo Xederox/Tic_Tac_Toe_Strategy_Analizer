@@ -7,7 +7,8 @@
     "start": "ts-node index.ts",
     "start:dev": "tsnd index.ts",
     "build": "tsc",
-    "create stage0 db": "ts-node scripts/createdb/stage0/index.ts"
+    "create stage0 db": "ts-node scripts/createdb/stage0/index.ts",
+    "testMC": "ts-node scripts/createdb/MonteCarlo/index.ts"
   },
   "author": "",
   "license": "ISC",

@@ -21,7 +21,7 @@ export const updateDB = async (data: dbRecord ): Promise<void> => {
     wins: data.wins,
     draws: data.draws,
     loses: data.loses,
-  })
+  });
 };
 
 export const insertRelation = async (parentID: string, childID: string): Promise<void> => {

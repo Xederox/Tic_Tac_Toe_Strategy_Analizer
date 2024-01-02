@@ -1,6 +1,6 @@
 import {pool} from "../../../db";
-import {checkWin} from './checkWin';
-import {checkEnd} from "./checkEnd";
+import {checkWin} from '../utils/checkWin';
+import {checkEnd} from "../utils/checkEnd";
 import {insertIntoDB, insertRelation, selectFromDB, updateDB} from "./dbFunctions";
 import {GridType, dbRecord} from "../../../types";
 
