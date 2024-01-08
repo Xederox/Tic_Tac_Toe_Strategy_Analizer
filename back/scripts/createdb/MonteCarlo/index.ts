@@ -1,7 +1,7 @@
 import {dbMonteRecord, GridType} from "../../../types";
-import {insertIntoDB, selectFromDB, selectValueFromDB, updateDB} from "./dbFunctions";
+import {insertIntoDB, selectFromDB, updateDB} from "./dbFunctions";
 import {checkWin} from "../utils/checkWin";
-import {checkEnd} from "../utils/checkEnd";
+import {checkDraw} from "../utils/checkDraw";
 
 const grid: GridType = [
   '0','0','0',
@@ -9,56 +9,82 @@ const grid: GridType = [
   '0','0','0',
 ];
 
-const getRandomIndex = (weights: Array<number>): number => {
-  let total = 0;
-  for(let i=0; i<weights.length; i++) {
-    total += weights[i];
-  }
-  let randomNumber = Math.random()*total;
-  for(let i=0; i<weights.length; i++){
-    if(randomNumber < weights[i])
-      return i;
-    randomNumber -= weights[i];
-  }
+const getNodeScore = (childValue: number, childTotal: number, parentTotal: number) => {
+  const a = 1; //Just a decimal constant. Feel free to adjust
+  return childValue/childTotal + a*Math.sqrt(Math.log( parentTotal )/childTotal);
+};
+
+const getBestIndex = (nodeScore: Array<number>) => {
+  let best = 0;
+  for(let i=1; i<nodeScore.length; i++)
+    if(nodeScore[i]>nodeScore[best])
+      best = i;
+  return best;
 };
 
 const getOtherPlayer = (currPlayer: '1'|'2'): '1'|'2' => {
   if(currPlayer === '1')
     return '2';
   return '1';
-}
+};
 
-const makeMove = async (id: string, grid: GridType, currPlayer: '1'|'2'): Promise<'1'|'2'|'3'> => {
+const getRandomIndex = (grid: GridType): number => {
+  let totalMoves = 0;
+  for(let i=0; i<grid.length; i++){
+    if(grid[i]==='0')
+      totalMoves++;
+  }
+  let random = Math.floor(Math.random()*totalMoves);
+  for(let i=0; i<grid.length; i++){
+    if(grid[i]==='0'){
+      if(random===0)
+        return i;
+      random--;
+    }
+  }
+};
+
+const randomSimulation = (grid: GridType, currPlayer: '1'|'2'): '1'|'2'|'3' => {
   let currGrid = JSON.parse(JSON.stringify(grid));
-  const weights = [];
+  currGrid[ getRandomIndex(grid) ] = currPlayer;
+  if(checkWin(currGrid)!=='0')
+    return currPlayer;
+  else if(checkDraw(currGrid)==='3')
+    return '3';
+  else
+    return randomSimulation(currGrid, getOtherPlayer(currPlayer));
+};
+
+const makeMove = async (id: string, grid: GridType, currPlayer: '1'|'2', parentTotal: number): Promise<'1'|'2'|'3'> => {
+  let currGrid = JSON.parse(JSON.stringify(grid));
+  const nodeScores = [];
+  let isRecorded: Array<boolean> = [false, false, false, false, false, false, false, false, false];
   let index: number;
   let winner: '1' | '2' | '3';
   
   for (let i = 0; i < 9; i++) {
-    let isRecorded: boolean;
     let result: dbMonteRecord;
     try {
       result = await selectFromDB(id + `${i+1}`);
-      isRecorded = true;
+      isRecorded[i] = true;
     } catch (e) {
-      isRecorded = false;
+      isRecorded[i] = false;
     }
-    
+  
     if(currGrid[i]==='0') {
-      if(isRecorded)
-        weights[i] = (result.value+1)/(result.total+1);
+      if(isRecorded[i])
+        nodeScores[i] = getNodeScore(result.value, result.total, parentTotal);
       else
-        weights[i] = 0.1;
+        nodeScores[i] = Infinity;
     }
     else
-      weights[i] = 0;
+      nodeScores[i] = -Infinity;
   }
   
-  index = getRandomIndex(weights);
+  index = getBestIndex(nodeScores);
   currGrid[index] = currPlayer;
   let currNode: dbMonteRecord = {
     id: id+`${index+1}`,
-    ratio: null,
     value: 0,
     total: 0,
   };
@@ -68,18 +94,20 @@ const makeMove = async (id: string, grid: GridType, currPlayer: '1'|'2'): Promis
     await insertIntoDB(currNode);
   }
   
-  if (checkWin(currGrid))
+  if(checkWin(currGrid)!=='0')
     winner = currPlayer;
-  else if (checkEnd(currGrid))
+  else if(checkDraw(currGrid)==='3')
     winner = '3';
+  else if(isRecorded[index])
+    winner = await makeMove(id+`${index+1}`,currGrid, getOtherPlayer(currPlayer), currNode.total);
   else
-    winner = await makeMove(id + `${index+1}`, currGrid, getOtherPlayer(currPlayer));
-  if (winner === currPlayer)
+    winner = randomSimulation(currGrid, getOtherPlayer(currPlayer));
+  
+  if(winner === currPlayer)
     currNode.value++;
-  else if (winner === '3')
+  else if(winner === '3')
     currNode.value += 0.5;
   currNode.total++;
-  currNode.ratio = Number((currNode.value/currNode.total).toFixed(2));
   await updateDB(currNode);
   
   return winner;
@@ -89,9 +117,27 @@ const start = new Date();
 let end: any;
 
 const run = async () => {
-  for (let i = 0; i < 10000; i++) {
-    await makeMove('', grid, '1');
+  for (let i = 0; i < 100; i++) {
+    let rootNode: dbMonteRecord = {
+      id: '0',
+      value: 0,
+      total: 0,
+    };
+    try {
+      rootNode = await selectFromDB('0');
+    } catch (e) {
+      await insertIntoDB(rootNode);
+    }
+    
+    let winner = await makeMove('', grid, '1', rootNode.total);
+    if(winner === '1')
+      rootNode.value++;
+    else if(winner === '3')
+      rootNode.value += 0.5;
+    rootNode.total++;
+    await updateDB(rootNode);
   }
+  
   end = new Date();
 }
 

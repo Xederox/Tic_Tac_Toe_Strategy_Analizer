@@ -1,6 +1,6 @@
 import {pool} from "../../../db";
 import {checkWin} from '../utils/checkWin';
-import {checkEnd} from "../utils/checkEnd";
+import {checkDraw} from "../utils/checkDraw";
 import {insertIntoDB, insertRelation, selectFromDB, updateDB} from "./dbFunctions";
 import {GridType, dbRecord} from "../../../types";
 
@@ -88,7 +88,7 @@ const createStage0DB = async (parentID: string, grid: GridType, currPlayer: 1|2)
       counter.perfectLoses++;
       parentMove.loses++;
       
-    } else if( checkEnd(currGrid) ) {
+    } else if( checkDraw(currGrid) ) {
       await updateDB({id: currID, perfect: 1, random: 0.50, wins: 0, draws: 1, loses: 0});
       if( parentMove.perfect !== 0 ) {
         parentMove.perfect = 1;
