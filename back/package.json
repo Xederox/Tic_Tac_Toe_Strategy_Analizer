@@ -9,7 +9,8 @@
     "build": "tsc",
     "create stage0 db": "ts-node scripts/createdb/stage0/index.ts",
     "testMC": "ts-node scripts/createdb/MonteCarlo/index.ts",
-    "create mcts stage1 db": "ts-node scripts/createdb/\"MCTS Stage1\"/index.ts"
+    "create mcts stage1 db": "ts-node scripts/createdb/\"MCTS Stage1\"/index.ts",
+    "create mcts stage0 db": "ts-node scripts/createdb/\"MCTS Stage0\"/index.ts"
   },
   "author": "",
   "license": "ISC",
