@@ -1,8 +1,8 @@
 import {pool} from "../../../db";
-import {checkWin} from '../utils/checkWin';
-import {checkDraw} from "../utils/checkDraw";
-import {insertIntoDB, insertRelation, selectFromDB, updateDB} from "./dbFunctions";
-import {GridType, dbRecord} from "../../../types";
+import {checkWin, checkDraw, getOtherPlayer, insertIntoDB, insertRelation, selectFromDB, updateDB} from '../utils';
+import {GridType, dbRecord, StageType} from "../../../types";
+
+let __stage: StageType = 'stage0';
 
 const grid: GridType = [
   '0', '0', '0',
@@ -10,18 +10,12 @@ const grid: GridType = [
   '0', '0', '0',
 ];
 
-const getID = (grid: GridType, currPlayer: 0 | 1 | 2, lastMove: string): string => {
+const getID = (grid: GridType, currPlayer: '1'|'2',): string => {
   let id = '';
   for(let i=0; i<grid.length; i++)
     id = id + grid[i];
-  id = id + `${currPlayer + lastMove}`;
+  id = id + currPlayer;
   return id;
-};
-
-const nextPlayer = (currPlayer: 1 | 2): 1 | 2 => {
-  if( currPlayer === 1 )
-    return 2;
-  return 1;
 };
 
 const coveredIDs: Array<undefined | string> = [];
@@ -32,7 +26,7 @@ const checkRepeat = (id: string) => {
   return false;
 };
 
-const createStage0DB = async (parentID: string, grid: GridType, currPlayer: 1|2): Promise<dbRecord> => {
+const createStage0DB = async (parentID: string, grid: GridType, currPlayer: '1'|'2'): Promise<dbRecord> => {
   const parentMove: dbRecord = {
     id: parentID,
     perfect: -1,
@@ -47,7 +41,6 @@ const createStage0DB = async (parentID: string, grid: GridType, currPlayer: 1|2)
     perfectWins: 0,
     perfectDraws: 0,
     perfectLoses: 0,
-    dummyMiss: 0,
   };
   
   for(let i: number = 0; i<9; i++) {
@@ -55,12 +48,12 @@ const createStage0DB = async (parentID: string, grid: GridType, currPlayer: 1|2)
       continue;
     
     currGrid = JSON.parse(JSON.stringify(grid));
-    currGrid[i] = `${currPlayer}`; // Typescript needs glasses here. Struggles to see tis a string
-    const currID = getID( currGrid,currPlayer,'' );
+    currGrid[i] = currPlayer; // Typescript needs glasses here. Struggles to see 'tis a string
+    const currID = getID( currGrid, currPlayer);
     
     if( checkRepeat(currID) ) {
-      await insertRelation(parentID, currID);
-      currMove = await selectFromDB(currID);
+      await insertRelation(parentID, currID, __stage);
+      currMove = await selectFromDB(currID, __stage);
       if (currMove.perfect === 2) {
       parentMove.perfect = 0;
       counter.perfectLoses++;
@@ -79,17 +72,17 @@ const createStage0DB = async (parentID: string, grid: GridType, currPlayer: 1|2)
       continue;
     }
     coveredIDs[coveredIDs.length] = currID;
-    await insertIntoDB({id: currID, perfect: -1, random: -1.00, wins: -1, draws: -1, loses:-1} );
-    await insertRelation(parentID, currID);
+    await insertIntoDB({id: currID, perfect: -1, random: -1.00, wins: -1, draws: -1, loses:-1}, __stage);
+    await insertRelation(parentID, currID, __stage);
     
-    if( checkWin(currGrid) ) {
-      await updateDB({id: currID, perfect: 2, random: 1.00, wins: 1, draws: 0, loses: 0} )
+    if( checkWin(currGrid)!=='0') {
+      await updateDB({id: currID, perfect: 2, random: 1.00, wins: 1, draws: 0, loses: 0}, __stage);
       parentMove.perfect = 0;
       counter.perfectLoses++;
       parentMove.loses++;
       
-    } else if( checkDraw(currGrid) ) {
-      await updateDB({id: currID, perfect: 1, random: 0.50, wins: 0, draws: 1, loses: 0});
+    } else if( checkDraw(currGrid)!=='0') {
+      await updateDB({id: currID, perfect: 1, random: 0.50, wins: 0, draws: 1, loses: 0}, __stage);
       if( parentMove.perfect !== 0 ) {
         parentMove.perfect = 1;
         counter.perfectDraws++;
@@ -97,8 +90,8 @@ const createStage0DB = async (parentID: string, grid: GridType, currPlayer: 1|2)
       parentMove.draws++;
       
     } else {
-      currMove = await createStage0DB( currID, currGrid, nextPlayer(currPlayer));
-      await updateDB(currMove);
+      currMove = await createStage0DB( currID, currGrid, getOtherPlayer(currPlayer));
+      await updateDB(currMove, __stage);
       if (currMove.perfect === 2) {
         parentMove.perfect = 0;
         counter.perfectLoses++;
@@ -129,11 +122,11 @@ let time: Date;
 const run = async () => {
   console.log('Beginning...');
   time = new Date;
-  await insertIntoDB({id: '0000000000', perfect: -1, random: -1.00, wins: -1, draws: -1, loses: -1});
-  primeGrid = await createStage0DB('0000000000', grid, 1);
-  await updateDB(primeGrid);
+  await insertIntoDB({id: '0000000000', perfect: -1, random: -1.00, wins: -1, draws: -1, loses: -1}, __stage);
+  primeGrid = await createStage0DB('0000000000', grid, '1');
+  await updateDB(primeGrid, __stage);
 };
 
 run()
-  .then(r => pool.end())
-  .then(r => console.log('Finished in ' + (Number(new Date().getTime()) - Number(time)).toString() + ' ms'));
+  .then(() => pool.end())
+  .then(() => console.log('Finished in ' + (Number(new Date().getTime()) - Number(time)).toString() + ' ms'));
