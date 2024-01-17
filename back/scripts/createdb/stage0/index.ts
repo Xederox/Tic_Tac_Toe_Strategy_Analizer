@@ -120,6 +120,27 @@ let primeGrid: dbRecord | void;
 let time: Date;
 
 const run = async () => {
+  await pool.execute("CREATE TABLE IF NOT EXISTS `stage0` (\n" +
+    "  `id` varchar(10) NOT NULL DEFAULT 'hey',\n" +
+    "  `perfect` tinyint(1) NOT NULL DEFAULT -1,\n" +
+    "  `random` decimal(3,2) NOT NULL DEFAULT -1.00,\n" +
+    "  `wins` int(11) NOT NULL DEFAULT -1,\n" +
+    "  `draws` int(11) NOT NULL DEFAULT -1,\n" +
+    "  `loses` int(11) NOT NULL DEFAULT -1,\n" +
+    "  PRIMARY KEY (`id`)\n" +
+    ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+  );
+  await pool.execute("CREATE TABLE IF NOT EXISTS `stage0_stage0` (\n" +
+    "  `id` int(20) unsigned NOT NULL AUTO_INCREMENT,\n" +
+    "  `parentid` varchar(10) NOT NULL DEFAULT '0',\n" +
+    "  `childid` varchar(10) NOT NULL DEFAULT '0',\n" +
+    "  PRIMARY KEY (`id`),\n" +
+    "  KEY `FK_stage0_stage0_stage0` (`parentid`),\n" +
+    "  KEY `FK_stage0_stage0_stage0_2` (`childid`),\n" +
+    "  CONSTRAINT `FK_stage0_stage0_stage0` FOREIGN KEY (`parentid`) REFERENCES `stage0` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,\n" +
+    "  CONSTRAINT `FK_stage0_stage0_stage0_2` FOREIGN KEY (`childid`) REFERENCES `stage0` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION\n" +
+    ") ENGINE=InnoDB AUTO_INCREMENT=16168 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+  );
   console.log('Beginning...');
   time = new Date;
   await insertIntoDB({id: '0000000000', perfect: -1, random: -1.00, wins: -1, draws: -1, loses: -1}, __stage);

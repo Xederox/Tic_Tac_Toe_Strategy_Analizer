@@ -16,7 +16,7 @@ export const MovesList = (props: Props) => {
   
   useEffect(() => {
     (async () => {
-      if(game!==null) {
+      if(game!==null && game.stage!==null) {
         try {
           let res: any;
           if(mcts)
