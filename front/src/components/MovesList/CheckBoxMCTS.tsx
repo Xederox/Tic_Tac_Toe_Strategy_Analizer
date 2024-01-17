@@ -9,7 +9,7 @@ export const CheckBoxMCTS = (props: Props) => {
   const handleChange = () => props.setMcts(!props.mcts);
   return (
     <label>
-      <input type={"checkbox"} onChange={handleChange}/> Monte Carlo Tree Search
+      <input type={"checkbox"} onChange={handleChange} defaultChecked={props.mcts} /> Monte Carlo Tree Search
     </label>
   )
 }
