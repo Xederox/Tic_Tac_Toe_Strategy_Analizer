@@ -46,25 +46,25 @@ export const Tutorial = () => {
           
           <p>There are restrictions though.</p>
           <p>Every move has to be made inside <b>Big Cell</b> corresponding to position of the <b>Small Cell</b> opponent took control in their last move.</p>
-          <p>Example 1: Player A made move in Cell no '73' (top-right). Player B is forced to make a move in bottom-left.</p>
-          <p>Example 2: Player A made move in Cell no '4_'. Player B is forced to make a move in cells '_4'.</p>
+          <p>Example 1: Player A made move in Cell no '37' (top-right). Player B is forced to make a move in bottom-left.</p>
+          <p>Example 2: Player A made move in Cell no '_4'. Player B is forced to make a move in cells '4_'.</p>
           
           <p>First move of the game has no restrictions.</p>
           <p>If player is forced to make a move inside a <b>Disabled</b> <b>Big Cell</b> then instead that move has no restrictions.</p>
           <p>Move without restrictions can be made inside any non-<b>Disabled</b> <b>Big Cell</b>.</p>
           
           <p>Cells' Coordinates</p>
-          <p>11 21 31 | 12 22 32 | 13 23 33</p>
-          <p>41 51 61 | 42 52 62 | 43 53 63</p>
-          <p>71 81 91 | 72 82 92 | 73 83 93</p>
+          <p>11 12 13 | 21 22 23 | 31 32 33</p>
+          <p>14 15 16 | 24 25 26 | 34 35 36</p>
+          <p>17 18 19 | 27 28 29 | 37 38 39</p>
           <p>----------|-----------|----------</p>
-          <p>14 24 34 | 15 25 35 | 16 26 36</p>
-          <p>44 54 64 | 45 55 65 | 46 56 66</p>
-          <p>74 84 94 | 75 85 95 | 76 86 96</p>
+          <p>41 42 43 | 51 52 53 | 61 62 63</p>
+          <p>44 45 46 | 54 55 56 | 64 65 66</p>
+          <p>47 48 49 | 57 58 59 | 67 68 69</p>
           <p>----------|-----------|----------</p>
-          <p>17 27 37 | 18 28 38 | 19 29 39</p>
-          <p>47 57 67 | 48 58 68 | 49 59 69</p>
-          <p>77 87 97 | 78 88 98 | 79 89 99</p>
+          <p>71 72 73 | 81 82 83 | 91 92 93</p>
+          <p>74 75 76 | 84 85 86 | 94 95 96</p>
+          <p>77 78 79 | 87 88 89 | 97 98 99</p>
         </div> : <></>
       }
       
