@@ -122,7 +122,7 @@ export const selectFromDB = async (id: string, stage: StageType): Promise<dbReco
 export const selectFromDBMonte = async (id: string, stage: StageType): Promise<dbMonteRecord> => {
   switch (stage) {
     case "stage0": {
-      const [results] = await pool.execute("SELECT * FROM `mcts stage0` WHERE id=:id", {id: id}) as [dbMonteRecord[], FieldPacket[]]; //mcts stage zero
+      const [results] = await pool.execute("SELECT * FROM `mcts stage0` WHERE id=:id", {id: id}) as [dbMonteRecord[], FieldPacket[]];
       return {
         id: results[0].id,
         value: results[0].value,
@@ -130,7 +130,7 @@ export const selectFromDBMonte = async (id: string, stage: StageType): Promise<d
       };
     }
     case "stage1": {
-      const [results] = await pool.execute("SELECT * FROM `mcts stage1` WHERE id=:id", {id: id}) as [dbMonteRecord[], FieldPacket[]]; //mcts stage one
+      const [results] = await pool.execute("SELECT * FROM `mcts stage1` WHERE id=:id", {id: id}) as [dbMonteRecord[], FieldPacket[]];
       return {
         id: results[0].id,
         value: results[0].value,

@@ -1,64 +1,52 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {dbRecord, PlayerType, StageType} from "types";
-import {Move} from "../Move/Move";
+import {dbMonteRecord, dbRecord, PlayerType} from "types";
 import {GameContext} from "../../App";
+import {CheckBoxMCTS} from "./CheckBoxMCTS";
+import {MovesTable} from "./MovesTable";
 
 interface Props {
-  stage: StageType,
   currPositionID: string,
   currPlayer: PlayerType,
 }
 
 export const MovesList = (props: Props) => {
-  const [moves, setMoves] = useState<dbRecord[]>([]);
+  const [moves, setMoves] = useState<dbRecord[] | dbMonteRecord[]>([]);
+  const [mcts, setMcts] = useState<boolean>(false);
+  const game = useContext(GameContext);
   
   useEffect(() => {
     (async () => {
-      if(props.stage === 'stage0'){
+      if(game!==null) {
         try {
-          const res = await fetch(`http://localhost:3001/${props.stage}/${props.currPositionID}`);
+          let res: any;
+          if(mcts)
+            res = await fetch(`http://localhost:3001/monte/${game.stage}/${game.currMonteID}`);
+          else
+            res = await fetch(`http://localhost:3001/solved/${game.stage}/${props.currPositionID}`);
           const data = await res.json();
-          setMoves(data);
-        } catch(e) {
+          if (data !== null)
+            setMoves(data);
+        } catch (e) {
           console.log(e);
         }
       }
     })();
-  }, [props.currPlayer]);
+  }, [props.currPlayer, mcts, game?.firstPlayer]);
   
-  const game = useContext(GameContext);
-  if(game === null)
+  if(game===null)
     return null;
   if(!game.stage || !game.firstPlayer)
     return null;
   
-  if(game.stage === 'stage1')
-    return (
-      <>
-        <p>Database not implemented</p>
-      </>
-    );
-  
   return (
     <>
-      <table>
-        <tr>
-          <td>Coord</td>
-          <td>Perfect Play</td>
-          <td>Random Play</td>
-          <td>Wins</td>
-          <td>Draws</td>
-          <td>Loses</td>
-        </tr>
-        {
-          moves.map((move, index) => (
-            <tr>
-              <Move key={index} currPositionID={props.currPositionID} record={move}/>
-            </tr>
-          ))
-        }
-      </table>
+      <CheckBoxMCTS mcts={mcts} setMcts={setMcts}/>
+      {game.stage==='stage1' && !mcts ?
+        <>
+          <p>Database not implemented</p>
+        </> :
+        <MovesTable mcts={mcts} moves={moves} currPositionID={props.currPositionID}/>
+      }
     </>
-  )
-  
+  );
 };

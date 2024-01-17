@@ -8,7 +8,7 @@ interface Props {
   id: string,
 }
 
-export function Stage0Cell(props: Props) {
+export function Cell(props: Props) {
   const game = useContext(GameContext);
   if(!game)
     return null;
@@ -23,27 +23,27 @@ export function Stage0Cell(props: Props) {
     cell = game.firstPlayer;
   else if(game.grid[cellIndex] === '2')
     cell = game.secondPlayer;
+
+  const handleClick = () => {
+    tempGrid[ cellIndex ] = `${game.currPlayer}`;
+    if(game.stage !== 'stage0')
+      tempGrid = gridKeeper(tempGrid, props.id);
+    game.setGrid(tempGrid);
   
-  if(game.stage !== 'stage0')
-    game.setLastMove(props.id);
+    if(game.currPlayer === 1)
+      game.setCurrPlayer(2);
+    else
+      game.setCurrPlayer(1);
+  
+    game.setCurrMonteID(game.currMonteID + '-' + props.id);
+  };
   
   return (
     <button
       className={'stage0-cell'}
-      disabled={ !(game.grid[cellIndex] === '0') || !( game.grid[Number(props.id[1])*10-1]==='0' || game.stage ==='stage0') }
+      disabled={ !(game.grid[cellIndex] === '0') || !( game.grid[Number(props.id[0])*10-1]==='0' || game.stage ==='stage0') }
       id={props.id}
-      onClick={ () => {
-        tempGrid[ cellIndex ] = `${game.currPlayer}`;
-        if(game.stage === 'stage1') {
-          tempGrid = gridKeeper(tempGrid, props.id);
-        }
-        game.setGrid(tempGrid);
-        
-        if(game.currPlayer === 1)
-          game.setCurrPlayer(2);
-        else
-          game.setCurrPlayer(1)
-      }}
+      onClick={handleClick}
     > {cell} </button>
   )
 }

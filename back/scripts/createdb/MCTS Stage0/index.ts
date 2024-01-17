@@ -1,7 +1,7 @@
 import {dbMonteRecord, GridType, StageType} from "../../../types";
 import {updateDB, getMonteRecord, makeMove,} from "../utils";
 
-let __stage: StageType = 'stage0';
+const __stage: StageType = 'stage0';
 
 const grid: GridType = [
   '0','0','0',

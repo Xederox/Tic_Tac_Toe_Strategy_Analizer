@@ -1,6 +1,6 @@
 import {GridType, PlayerType} from "types";
 
-export const getID = (grid: GridType, currPlayer: PlayerType, lastMove: string): string => {
+export const getID = (grid: GridType, currPlayer: PlayerType): string => {
   let start = true;
   let id = '';
   for(let i=0; i<grid.length; i++) {
@@ -8,13 +8,13 @@ export const getID = (grid: GridType, currPlayer: PlayerType, lastMove: string):
       start = false;
     id = id + grid[i];
   }
-  id = id + `${currPlayer + lastMove}`;
+  id = id + `${currPlayer}`;
   if(start) {
     if(grid.length === 9) {
       return '0000000000';
     }
-    if(grid.length === 81)
-      return 'Stage 1 Starting Grid ID Here';
+    if(grid.length === 90)
+      return '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
   }
   return id;
 };
@@ -26,7 +26,7 @@ export const otherPlayer = (player: PlayerType): PlayerType => {
     return 2;
 };
 
-export const otherFirstPlayer = (player: 'O' | 'X' | null): 'O' | 'X' | null => {
+export const getSecondPlayer = (player: 'O' | 'X' | null): 'O' | 'X' | null => {
   if(player === 'O')
     return 'X';
   else if(player === 'X')

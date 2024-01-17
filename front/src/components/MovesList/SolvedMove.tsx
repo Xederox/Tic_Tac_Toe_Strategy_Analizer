@@ -1,5 +1,5 @@
 import React from 'react';
-import { dbRecord} from "types";
+import {dbRecord} from "types";
 
 interface Props {
   currPositionID: string,
@@ -15,9 +15,9 @@ const getDiffIndex = (id1: string, id2: string): number => {
     if(id1[i] !== id2[i])
       return i;
   return -1; //unreachable (copium)
-}
+};
 
-export const Move = (props: Props) => {
+export const SolvedMove = (props: Props) => {
   const moveID = getCellID( getDiffIndex(props.currPositionID, props.record.id) ) ;
   let perfectPlay: string;
   if(props.record.perfect === 2) perfectPlay = 'Win';

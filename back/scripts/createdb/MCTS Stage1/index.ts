@@ -1,7 +1,7 @@
 import {dbMonteRecord, GridType, StageType} from "../../../types";
 import {updateDB, getMonteRecord, makeMove,} from "../utils";
 
-let __stage: StageType = 'stage1';
+const __stage: StageType = 'stage1';
 
 const grid: GridType = [
   '0','0','0','0','0','0','0','0','0','0',
@@ -20,7 +20,7 @@ let end: any;
 
 const run = async () => {
   let score = 0;
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 100000; i++) {
     let rootNode: dbMonteRecord = await getMonteRecord('0', __stage)
     const winner = await makeMove('0', grid, '1', rootNode.total, __stage);
     if(winner==='1')
@@ -36,4 +36,3 @@ const run = async () => {
 }
 
 run().then(() => console.log(Number(end)-Number(start)+' ms'));
-
