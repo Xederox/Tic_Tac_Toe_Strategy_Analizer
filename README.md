@@ -39,4 +39,5 @@ total - total amount of simulations for given move  <br/>
 - Looks the way it looks  <br/>
 
 <h1>License</h1>
-Copyright free
+Whatever license is forced to be.  <br/>
+Otherwise copyright free  <br/>
