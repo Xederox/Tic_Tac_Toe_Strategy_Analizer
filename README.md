@@ -37,3 +37,6 @@ total - total amount of simulations for given move  <br/>
 - First move of Stage 1 MCTS is limited to 15 options (all unique moves), moves outside of those are omitted  <br/>
 - Scripts for filling database's tables ignore board symmetries  <br/>
 - Looks the way it looks  <br/>
+
+<h1>License</h1>
+Copyright free
