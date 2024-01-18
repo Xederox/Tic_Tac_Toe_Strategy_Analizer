@@ -1,4 +1,4 @@
-# Tic_Tac_Toe_Strategy_Analizer
+# Tic Tac Toe - Strategy Analizer
 
 Goal of the project is to learn optimal strategy for the game of Tic Tac Toe and its advanced version Ultimate Tic Tak Toe.  
 While playing, a list of moves (sorted from best to worst) will be shown along with some values describing them.  
