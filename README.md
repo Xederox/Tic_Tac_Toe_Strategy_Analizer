@@ -25,6 +25,11 @@ Score - score of given move (value/total*100 rounded down)  <br/>
 value - amount of wins and draws during simulation for given move (draws count as 0.5)  <br/>
 total - total amount of simulations for given move  <br/>
 
+![alt text](https://github.com/Xederox/Tic_Tac_Toe_Strategy_Analizer/blob/main/Pics/Start.png?raw=true)
+![alt text](https://github.com/Xederox/Tic_Tac_Toe_Strategy_Analizer/blob/main/Pics/Solved0.png?raw=true)
+![alt text](https://github.com/Xederox/Tic_Tac_Toe_Strategy_Analizer/blob/main/Pics/Monte01.png?raw=true)  <br/>
+![alt text](https://github.com/Xederox/Tic_Tac_Toe_Strategy_Analizer/blob/main/Pics/Monte1.png?raw=true)
+
 <h1>Technology Used</h1>
 - Typescript <br/>
 - React <br/>
